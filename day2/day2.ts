@@ -5,17 +5,27 @@ var m_input: Array<number> = [];
 for (let i = 0; i < input.length; i++){
     m_input.push(Number(input[i]));
 }
-m_input[1] = 12;
-m_input[2] = 2;
-for (let i = 0; i < m_input.length; i+=4){
-    console.log(input[i])
-    if (m_input[i] === 1){
-        m_input[m_input[i+3]] = m_input[m_input[ i+1 ]] + m_input[m_input[ i+2 ]];
+
+for (let noun = 0; noun < 99; noun++){
+    for (let verb = 0; verb < 99; verb++){
+        let result = run_program(noun, verb, Object.assign([], m_input));
+        if (result === 19690720){
+            console.log(`noun: ${noun}, verb: ${verb}`);
+        }
     }
-    else if (m_input[i] === 2){
-        m_input[m_input[i+3]] = m_input[m_input[ i+1 ]] * m_input[m_input[ i+2 ]];
-    }
-    else if (m_input[i] === 99){
-        console.log(m_input);
+}
+function run_program(noun: number, verb: number, memory: Array<number>){
+    memory[1] = noun;
+    memory[2] = verb;
+    for (let i = 0; i < memory.length; i+=4){
+        if (memory[i] === 1){
+            memory[memory[i+3]] = memory[memory[ i+1 ]] + memory[memory[ i+2 ]];
+        }
+        else if (memory[i] === 2){
+            memory[memory[i+3]] = memory[memory[ i+1 ]] * memory[memory[ i+2 ]];
+        }
+        else if (memory[i] === 99){
+            return memory[0];
+        }
     }
 }
