@@ -1,35 +1,49 @@
 
 export class intcomp{
-    memory: Array<string> = [];
+    memory: Array<number> = [];
     pointer:number = 0;
-    outputs: Array<string> = [];
-    input: string = null;
-    last_output: string = null;
+    outputs: Array<number> = [];
+    input: number = null;
+    last_output: number = null;
 
     constructor(memory: Array<string>){
-        this.memory = memory;
+        memory.forEach(element => this.memory.push(Number(element)));
     }
-    add_input(input:string){
+    add_input(input:number){
         this.input = input;
+    }
+
+    split_instruction(instruction: number){
+        let str_inst: string = instruction.toString();
+        let params: Array<number> = str_inst.slice(0, -2).split('').map(
+            element => Number(element)
+        );
+        while (params.unshift(0) < 3) continue;
+        return {command: Number( str_inst.slice(-2) ),
+                params: params};
+    }
+
+    get_args(params: Array<number>){
+        let arg1: number = params[params.length-1] ? this.memory[this.pointer+1] : this.memory[this.memory[ this.pointer+1 ]];
+        let arg2: number = params[params.length-2] ? this.memory[this.pointer+2] : this.memory[this.memory[ this.pointer+2 ]];
+        
+        return {arg1: arg1, arg2: arg2};
     }
 
     run_program(){
         while (true){
-            let command: number = Number(this.memory[this.pointer].toString().slice(-2));
-            let params: Array<string> = this.memory[this.pointer].toString().slice(0, -2).split('');
-            while (params.unshift('0') < 3) continue;
-            let arg1: number = Number((params[params.length-1] === '1') ? this.memory[this.pointer+1] : this.memory[this.memory[ this.pointer+1 ]]);
-            let arg2: number = Number( (params[params.length-2] === '1') ? this.memory[this.pointer+2] : this.memory[this.memory[ this.pointer+2 ]] );
+            let {command, params} = this.split_instruction(this.memory[this.pointer]);
+            let {arg1, arg2} = this.get_args(params);
             if (command === 1){
-                this.memory[this.memory[this.pointer+3]] = String(arg1 + arg2);
+                this.memory[this.memory[this.pointer+3]] = arg1 + arg2;
                 this.pointer += 4;
             }
             else if (command === 2){
-                this.memory[this.memory[this.pointer+3]] = String(arg1 * arg2);
+                this.memory[this.memory[this.pointer+3]] = arg1 * arg2;
                 this.pointer += 4;
             }
             else if (command === 3){
-                if ( !this.input){
+                if (this.input === null){
                     return
                 }
                 this.memory[this.memory[this.pointer+1]] = this.input;
@@ -37,8 +51,8 @@ export class intcomp{
                 this.input = null;
             }
             else if (command === 4){
-                let output = '';
-                if (params[params.length-1] === '1'){
+                let output: number;
+                if (params[params.length-1]){
                     output = this.memory[this.pointer+1];
                 }
                 else{
