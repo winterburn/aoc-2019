@@ -7,11 +7,16 @@ input.forEach((element, idx) => {
     if (image[Math.floor(( idx/25 ) / 6)][Math.floor(( idx/25 ) % 6)] === undefined){image[Math.floor((idx / 25) / 6)][Math.floor(( idx/25 ) % 6)] = []}
     image[Math.floor((idx / 25) / 6)][Math.floor(( idx/25 ) % 6)].push(Number(element));
 });
+var final_image: Array<Array<number>> = [];
 function solve(layer: Array<Array<number>>){
     let counts: Array<number> = new Array(3).fill(0);
-    for (let row of layer) {
-        for(let num of row) {
-            counts[num]++;
+    for (let row in layer) {
+        if (final_image[row] === undefined){final_image[row] = []}
+        for(let num in layer[row]) {
+            if (final_image[row][num] === 2 || final_image[row][num] === undefined){
+                final_image[row][num] = layer[row][num];
+            }
+            counts[layer[row][num]]++;
         }
     }
     return counts;
@@ -26,3 +31,4 @@ image.forEach(layer => {
 })
 
 console.log(result[1] * result[2]);
+console.log(final_image);
