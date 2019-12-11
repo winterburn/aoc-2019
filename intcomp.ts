@@ -5,7 +5,7 @@ export class intcomp{
     relative_base: number = 0;
     outputs: Array<number> = [];
     input: number = null;
-    last_output: number = null;
+    last_output: Array<number> = [];
 
     constructor(memory: Array<string>){
         memory.forEach(element => this.memory.push(Number(element)));
@@ -15,6 +15,11 @@ export class intcomp{
     }
     add_input(input:number){
         this.input = input;
+        this.last_output = [];
+    }
+
+    get_output(){
+        return this.last_output;
     }
 
     split_instruction(instruction: number){
@@ -68,7 +73,6 @@ export class intcomp{
     }
 
     run_program(){
-        console.log(this.memory)
         while (true){
             let {command, params} = this.split_instruction(this.memory[this.pointer]);
             let {arg1, arg2, arg3} = this.get_args(params);
@@ -89,8 +93,7 @@ export class intcomp{
                 this.input = null;
             }
             else if (command === 4){
-                this.last_output = this.memory[arg1];
-                console.log(this.last_output)
+                this.last_output.push(this.memory[arg1]);
                 this.pointer += 2;
             }
             else if (command === 5){
