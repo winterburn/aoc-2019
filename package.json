@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "@types/lodash": "^4.14.149",
+    "@types/mathjs": "^6.0.8",
     "js-combinatorics": "^0.5.4",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "mathjs": "^8.1.0"
   },
   "devDependencies": {
     "@types/node": "^12.12.14"
